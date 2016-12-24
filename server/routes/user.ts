@@ -2,6 +2,9 @@ import { Router, Response, Request } from 'express';
 import { User } from "./models/user.model";
 import { secret } from "../config";
 
+export var passport = require('passport');
+require('../passport')(passport);
+
 var jwt = require('jwt-simple');
 
 const userRouter: Router = Router();
@@ -56,5 +59,44 @@ userRouter.post('/authenticate', function(req: Request, res: Response) {
     }
   });
 });
+
+// route to a restricted info (GET http://localhost:8080/api/memberinfo)
+userRouter.get('/profile', passport.authenticate('jwt', 
+	{ session: false}), 
+	function(req, res) {
+	  var token = getToken(req.headers);
+	  if (token) {
+	    var decoded = jwt.decode(token, secret);
+	    User.findOne({
+	      name: decoded.name
+	    }, function(err, user) {
+	        if (err) throw err;
+	 
+	        if (!user) {
+	          return res.status(403).send({success: false, 
+	          	msg: 'Authentication failed. User not found.'});
+	        } else {
+	          res.json({success: true, 
+	          	msg: 'Welcome to the profile page ' + user.name + '!'});
+	        }
+	    });
+	  } else {
+	    return res.status(403).send({success: false, msg: 'No token provided.'});
+	  }
+	}
+);
+ 
+var getToken = function (headers) {
+  if (headers && headers.authorization) {
+    var parted = headers.authorization.split(' ');
+    if (parted.length === 2) {
+      return parted[1];
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+};
 
 export { userRouter }

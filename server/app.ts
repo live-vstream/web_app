@@ -5,7 +5,8 @@ import * as cors from 'cors';
 import * as compression from 'compression';
 
 import { streamRouter } from './routes/stream';
-import { userRouter } from './routes/user'
+import { userRouter, passport } from './routes/user';
+
 
 var mongoose = require('mongoose');
 // Set up mongodb connection
@@ -25,6 +26,8 @@ app.disable('x-powered-by');
 app.use(json());
 app.use(compression());
 app.use(urlencoded({ extended: true }));
+
+app.use(passport.initialize());
 
 // api routes
 app.use('/api/stream', streamRouter);
