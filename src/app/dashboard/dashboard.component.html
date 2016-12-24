@@ -1,0 +1,27 @@
+<h2>Dashboard component</h2>
+
+<h3>Feeds</h3>
+
+
+<div class="stream animation" *ngFor="let item of streams">
+  <a> <b>Stream Name: </b>{{item.name}}</a>
+  <div class="text">
+    <b>Stream Token: </b> {{item.token}}
+  </div>
+  <div class="actions">
+    <a class="reply"><button class="ui button icon basic red" (click)="stopStream(item)">STOP</button></a>
+  </div>
+  
+  <div class="clear"></div>
+</div>
+
+<br/>
+
+<form class="form">
+  <div class="field">
+    <input placeholder="Stream Name" type="text" #streamName />
+  </div>
+  <button class="ui blue labeled submit icon button" (click)="startNewStream(streamName)">
+    <i class="icon edit"></i> Start New Stream!
+  </button>
+</form>
