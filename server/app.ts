@@ -5,6 +5,18 @@ import * as cors from 'cors';
 import * as compression from 'compression';
 
 import { streamRouter } from './routes/stream';
+import { userRouter } from './routes/user'
+
+var mongoose = require('mongoose');
+// Set up mongodb connection
+mongoose.connect('mongodb://admin:admin123@localhost:27017/admin');
+export var db = mongoose.connection;
+mongoose.Promise = global.Promise;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('Connected to MongoDB ;)');
+});
+
 
 const app: express.Application = express();
 
@@ -16,6 +28,7 @@ app.use(urlencoded({ extended: true }));
 
 // api routes
 app.use('/api/stream', streamRouter);
+app.use('/api/user', userRouter);
 
 if (app.get('env') === 'production') {
 
