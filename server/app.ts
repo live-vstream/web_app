@@ -10,7 +10,7 @@ import { userRouter, passport } from './routes/user';
 
 var mongoose = require('mongoose');
 // Set up mongodb connection
-mongoose.connect('mongodb://admin:admin123@localhost:27017/admin');
+mongoose.connect('mongodb://test:live123test@ds145158.mlab.com:45158/live-stream');
 export var db = mongoose.connection;
 mongoose.Promise = global.Promise;
 db.on('error', console.error.bind(console, 'connection error:'));
